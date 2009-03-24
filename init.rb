@@ -15,9 +15,10 @@ Redmine::Plugin.register :wiki_latex_plugin do
 Latex Plugin
 EOF
 		macro :latex do |wiki_content_obj, args|
+			m = WikiLatexHelper::Macro.new(args.to_s)
 			#m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
-			#m.graphviz(args, params[:id])
-      "nix"
+			m.render
+			#args
 		end
 	end
 end
