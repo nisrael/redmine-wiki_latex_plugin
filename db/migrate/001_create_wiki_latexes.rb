@@ -1,6 +1,5 @@
-class RecreateWikiLatexes < ActiveRecord::Migration
+class CreateWikiLatexes < ActiveRecord::Migration
   def self.up
-    drop_table :wiki_latexes
     create_table :wiki_latexes do |t|
       t.column :id, :string, :limit => 64, :null => false
       t.column :source, :text, :null => false
@@ -9,5 +8,6 @@ class RecreateWikiLatexes < ActiveRecord::Migration
   end
 
   def self.down
+    drop_table :wiki_latexes
   end
 end
