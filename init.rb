@@ -5,24 +5,24 @@ RAILS_DEFAULT_LOGGER.info 'Starting wiki_latex_plugin for Redmine'
 Redmine::Plugin.register :wiki_latex_plugin do
   name 'Latex Wiki-macro Plugin'
   author 'soda'
-  description 'Render latex image from the wiki contents'
-  version '0.0.1'
-#	settings :default => {'cache_seconds' => '0'}, :partial => 'wiki_graphviz/settings'
+  description 'Render latex images'
+  version '0.0.2'
 
 	Redmine::WikiFormatting::Macros.register do
 
 		desc <<'EOF'
 Latex Plugin
+{{latex(place latex code here)}}
+
+{{latex(
+or place
+some code
+here
+)}}
 EOF
 		macro :latex do |wiki_content_obj, args|
-			m = WikiLatexHelper::Macro.new(args.to_s)
-			#m = WikiGraphvizHelper::Macro.new(self, wiki_content_obj)
+			m = WikiLatexHelper::Macro.new(self, args[0])
 			m.render
-			#args
 		end
 	end
 end
-
-
-
-# vim: set ts=2 sw=2 sts=2:
