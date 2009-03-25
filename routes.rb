@@ -1,1 +1,1 @@
-connect 'latex/:id.png', :controller => 'wiki_latex', :action => 'image'
+connect 'latex/:image_id.png', :controller => 'wiki_latex', :action => 'image'

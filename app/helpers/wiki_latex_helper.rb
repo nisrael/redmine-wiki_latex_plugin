@@ -3,7 +3,7 @@ require	'tempfile'
 
 module WikiLatexHelper
   def render_image_tag(latex, classname)
-    render_to_string :template => 'wiki_latex/macro', :layout => false, :locals => {:classname=> classname, :latex_id => latex.id, :source => latex.source}
+    render_to_string :template => 'wiki_latex/macro', :layout => false, :locals => {:classname=> classname, :name => latex.image_id, :source => latex.source}
   end
 
 	class Macro
@@ -14,11 +14,10 @@ module WikiLatexHelper
 			source = source.gsub("<br />","")
 			name = Digest::SHA256.hexdigest(source)
 			if !WikiLatex.exists?(name)
-				@latex = WikiLatex.new(:source => source)
-				@latex.id = name
+				@latex = WikiLatex.new(:source => source, :image_id => name)
 				@latex.save
 			else
-				@latex = WikiLatex.find(name)
+				@latex = WikiLatex.find_by_image_id(name)
 			end
 		end
 

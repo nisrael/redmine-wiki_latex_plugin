@@ -1,8 +1,8 @@
 class WikiLatexController < ApplicationController
 
   def image
-    @latex = WikiLatex.find(params[:id])
-    @name = params[:id]
+    @latex = WikiLatex.find_by_image_id(params[:image_id])
+    @name = params[:image_id]
     image_file = File.join([RAILS_ROOT, 'tmp', 'wiki_latex_plugin', @name+".png"])
     if (!File.exists?(image_file))
     	render_image
@@ -14,10 +14,6 @@ class WikiLatexController < ApplicationController
     end
     rescue ActiveRecord::RecordNotFound
       render_404
-  end
-		
-	def image_tag(name, block)
-    render :partial => "image", :locals => {:block => block}
   end
 
 private
