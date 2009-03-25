@@ -1,0 +1,18 @@
+.latexinline{
+  position: relative;
+  top: 0.6em;
+}
+
+.latexblock img{
+	display: block;
+}
+
+.latexblock .wiki_page{
+	font-size: 80%;
+	border-top: 1px solid #ccc;
+	color: #aaa;
+}
+
+.latexblock .wiki_page a{
+	color: #999;
+}

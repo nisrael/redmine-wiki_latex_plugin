@@ -1,0 +1,7 @@
+<div class='latexblock'
+  <img src='<%= url_for(:controller => 'wiki_latex', :action => 'image', :image_id => name) %>' alt='<%= source %>' />
+  <span class='wiki_page'>Edit source: [[<%= wiki_name %>]]</span>
+</div>
+<% content_for :header_tags do %>
+   <%= stylesheet_link_tag "wiki_latex.css", :plugin => "wiki_latex_plugin", :media => :all %>
+<% end %>
