@@ -3,7 +3,11 @@ class WikiLatexController < ApplicationController
   def image
     @latex = WikiLatex.find_by_image_id(params[:image_id])
     @name = params[:image_id]
-    image_file = File.join([RAILS_ROOT, 'tmp', 'wiki_latex_plugin', @name+".png"])
+    if @name != "error"
+	image_file = File.join([RAILS_ROOT, 'tmp', 'wiki_latex_plugin', @name+".png"])
+    else
+	image_file = File.join([RAILS_ROOT, 'public', 'plugin_assets', 'wiki_latex_plugin', 'images', @name+".png"])
+    end
     if (!File.exists?(image_file))
     	render_image
     end
@@ -30,9 +34,8 @@ private
     temp_latex.puts('\usepackage{amsmath}')
     temp_latex.puts('\usepackage{amsfonts}')
     temp_latex.puts('\usepackage{amssymb}')
-    temp_latex.puts('\usepackage{pst-plot}')
     temp_latex.puts('\usepackage{color}')
-    temp_latex.puts('\pagestyle{empty}')
+    temp_latex.puts('\usepackage[active,displaymath,textmath,graphics]{preview}')
     temp_latex.puts('\begin{document}')
     temp_latex.puts @latex.source
     temp_latex.puts '\end{document}'
@@ -40,10 +43,11 @@ private
     temp_latex.close
 
     fork_exec(dir, "/usr/bin/latex --interaction=nonstopmode "+@name+".tex 2> /dev/null > /dev/null")
-    fork_exec(dir, "/usr/bin/dvips -E "+@name+".dvi -o "+@name+".ps")
-    fork_exec(dir, "/usr/bin/convert -density 120 "+@name+".ps "+@name+".png")
+    fork_exec(dir, "/usr/bin/dvipng "+@name+".dvi -o "+@name+".png")
     ['tex','dvi','log','aux','ps'].each do |ext|
-    	File.unlink(basefilename+"."+ext)
+	if File.exists?(basefilename+"."+ext)
+    	    File.unlink(basefilename+"."+ext)
+	end
     end
   end
 

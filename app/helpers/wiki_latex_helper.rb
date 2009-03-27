@@ -2,34 +2,40 @@ require 'digest/sha2'
 require	'tempfile'
 
 module WikiLatexHelper
-  def render_image_tag(latex)
-    render_to_string :template => 'wiki_latex/macro_inline', :layout => false, :locals => {:name => latex.image_id, :source => latex.source}
+  def render_image_tag(image_name, source)
+    render_to_string :template => 'wiki_latex/macro_inline', :layout => false, :locals => {:name => image_name, :source => source}
   end
 
-  def render_image_block(latex, wiki_name)
-    render_to_string :template => 'wiki_latex/macro_block', :layout => false, :locals => {:name => latex.image_id, :source => latex.source, :wiki_name => wiki_name}
+  def render_image_block(image_name, source, wiki_name)
+    render_to_string :template => 'wiki_latex/macro_block', :layout => false, :locals => {:name => image_name, :source => source, :wiki_name => wiki_name}
   end
 	class Macro
 		def initialize(view, source)
 		  @view = view
 		  @view.controller.extend(WikiLatexHelper)
-			@classname = source.index("<br />")!= nil ? "latex-block":"latex-inline" 
 			source.gsub!(/<br \/>/,"")
 			source.gsub!(/<\/?p>/,"")
 			name = Digest::SHA256.hexdigest(source)
-			if !WikiLatex.exists?(name)
+			if !WikiLatex.find_by_image_id(name)
 				@latex = WikiLatex.new(:source => source, :image_id => name)
 				@latex.save
-			else
-				@latex = WikiLatex.find_by_image_id(name)
 			end
+			@latex = WikiLatex.find_by_image_id(name)
 		end
 
 		def render()
-		  @view.controller.render_image_tag(@latex)
+		  if @latex
+		    @view.controller.render_image_tag(@latex.image_id, @latex.source)
+		  else
+		    @view.controller.render_image_tag("error", "error")
+		  end
 		end
 		def render_block(wiki_name)
-		  @view.controller.render_image_block(@latex, wiki_name)
+		  if @latex
+		    @view.controller.render_image_block(@latex.image_id, @latex.source, wiki_name)
+		  else
+		    @view.controller.render_image_block("error", "error", wiki_name)
+		  end
 		end
 	end
 end
