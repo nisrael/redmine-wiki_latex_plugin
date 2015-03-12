@@ -1,6 +1,6 @@
 require 'redmine'
 
-RAILS_DEFAULT_LOGGER.info 'Starting wiki_latex_plugin for Redmine'
+Rails.logger.info 'Starting wiki_latex_plugin for Redmine'
 
 Redmine::Plugin.register :wiki_latex_plugin do
   name 'Latex Wiki-macro Plugin'
